@@ -1,3 +1,4 @@
+import { GenreFilter } from './GenreFilter/GenreFilter'
 import { usePresenter } from './logic/usePresenter'
 import { Pagination } from './Pagination/Pagination'
 import { ShowList } from './ShowList/ShowList'
@@ -10,9 +11,19 @@ type Props = {
   onPageChange: (page: number) => void
 }
 
-// Genre chips come in step 7.
 export function ShowsBrowser(props: Props) {
-  const { query, isEmpty, shows, page, pageCount, changePage } = usePresenter(props)
+  const {
+    query,
+    isEmpty,
+    totalCount,
+    genres,
+    selectedGenre,
+    changeGenre,
+    shows,
+    page,
+    pageCount,
+    changePage,
+  } = usePresenter(props)
 
   if (isEmpty) {
     return <p className="text-muted-foreground">No shows found for “{query}”.</p>
@@ -20,6 +31,12 @@ export function ShowsBrowser(props: Props) {
 
   return (
     <div className="flex flex-col gap-6">
+      <GenreFilter
+        genres={genres}
+        selected={selectedGenre}
+        totalCount={totalCount}
+        onChange={changeGenre}
+      />
       <ShowList shows={shows} />
       <Pagination page={page} pageCount={pageCount} onPageChange={changePage} />
     </div>
