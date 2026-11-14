@@ -34,7 +34,7 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/src/domain/**"],
+			"includes": ["**/src/pages/**", "**/src/components/**"],
 			"linter": {
 				"rules": {
 					"style": {
@@ -43,122 +43,43 @@
 							"options": {
 								"patterns": [
 									{
-										"group": ["react", "react-*", "@tanstack/*", "zod"],
-										"message": "domain is framework-free (ARCHITECTURE.md › Domain)."
+										"group": ["../**", "!../**/components/**"],
+										"message": "Upward imports go only to a components/ folder. Needed in another branch? Move it to the nearest common components/ (ARCHITECTURE.md › Where a component or Task lives)."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/src/pages/**/View.tsx", "**/src/components/**/View.tsx"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["../**", "!../**/components/**"],
+										"message": "Upward imports go only to a components/ folder. Needed in another branch? Move it to the nearest common components/ (ARCHITECTURE.md › Where a component or Task lives)."
 									},
-									{
-										"group": [
-											"#/data/**",
-											"#/app/**",
-											"#/modules/**",
-											"#/shared/**",
-											"#/routes/**"
-										],
-										"message": "domain depends on nothing outside domain."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/data/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["react", "react-*", "@tanstack/*"],
-										"message": "data adapters must not depend on UI or Query."
-									},
-									{
-										"group": [
-											"#/app/**",
-											"#/modules/**",
-											"#/routes/**",
-											"#/shared/ui/**",
-											"#/shared/hooks/**"
-										],
-										"message": "data may import only domain and shared/lib."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/shared/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": [
-											"#/domain/**",
-											"#/data/**",
-											"#/app/**",
-											"#/modules/**",
-											"#/routes/**"
-										],
-										"message": "shared must stay generic and import only shared."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/routes/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["#/data/**"],
-										"message": "routes reach data only through app (container, queries)."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/modules/**/View.tsx"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
 									{
 										"group": [
 											"@tanstack/*",
 											"zod",
-											"#/domain/**",
-											"#/data/**",
-											"#/app/**",
-											"#/shared/hooks/**",
-											"#/shared/lib/**"
+											"#/api/**",
+											"#/tasks/**",
+											"#/queries/**",
+											"#/hooks/**",
+											"#/lib/**",
+											"!#/lib/utils",
+											"./logic/**",
+											"!./logic/usePresenter"
 										],
-										"message": "View is JSX only: take everything from ./usePresenter or props."
+										"message": "View is JSX only: everything else comes from ./logic/usePresenter or props."
 									}
 								]
 							}
@@ -168,7 +89,7 @@
 			}
 		},
 		{
-			"includes": ["**/src/modules/**/usePresenter.ts"],
+			"includes": ["**/src/pages/*/logic/**"],
 			"linter": {
 				"rules": {
 					"style": {
@@ -177,8 +98,12 @@
 							"options": {
 								"patterns": [
 									{
-										"group": ["#/data/**"],
-										"message": "Presenter gets data via app queries / domain tasks, never data adapters."
+										"group": ["../**", "!../**/components/**"],
+										"message": "Upward imports go only to a components/ folder."
+									},
+									{
+										"group": ["#/api/**"],
+										"message": "Presenter talks to the server via tasks/queries, not api directly."
 									}
 								]
 							}
@@ -188,7 +113,7 @@
 			}
 		},
 		{
-			"includes": ["**/src/modules/*/*/*/**/usePresenter.ts"],
+			"includes": ["**/src/pages/*/*/**/logic/**"],
 			"linter": {
 				"rules": {
 					"style": {
@@ -197,12 +122,128 @@
 							"options": {
 								"patterns": [
 									{
-										"group": ["#/data/**"],
-										"message": "Presenter gets data via app queries / domain tasks, never data adapters."
+										"group": ["../**", "!../**/components/**"],
+										"message": "Upward imports go only to a components/ folder."
+									},
+									{
+										"group": ["#/api/**"],
+										"message": "Presenter talks to the server via tasks/queries, not api directly."
 									},
 									{
 										"group": ["@tanstack/react-router"],
-										"message": "Only the module root reads/changes router state; nested components get props."
+										"message": "Only the page root presenter reads/changes router state; nested components get props."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"**/src/pages/**/components/**/logic/**",
+				"**/src/components/**/logic/**"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["../**", "!../**/components/**"],
+										"message": "Upward imports go only to a components/ folder."
+									},
+									{
+										"group": ["#/api/**"],
+										"message": "Presenter talks to the server via tasks/queries, not api directly."
+									},
+									{
+										"group": ["@tanstack/*"],
+										"message": "Reusable components are props-only: no router, no Query."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/tasks/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["react", "react-*", "react/**", "@tanstack/*"],
+										"message": "Tasks are plain JS functions: no React, no Query, no router."
+									},
+									{
+										"group": [
+											"#/pages/**",
+											"#/components/**",
+											"#/hooks/**",
+											"#/queries/**",
+											"#/routes/**"
+										],
+										"message": "Tasks depend only on api, lib and other tasks."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/src/api/**", "**/src/lib/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["react", "react-*", "react/**", "@tanstack/*"],
+										"message": "api and lib are framework-free."
+									},
+									{
+										"group": [
+											"#/pages/**",
+											"#/components/**",
+											"#/hooks/**",
+											"#/queries/**",
+											"#/tasks/**",
+											"#/routes/**"
+										],
+										"message": "api and lib may import only api and lib."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/src/queries/**", "**/src/routes/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["#/api/**"],
+										"message": "Go through tasks, not api directly."
 									}
 								]
 							}
