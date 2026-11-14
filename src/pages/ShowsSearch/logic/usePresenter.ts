@@ -7,7 +7,12 @@ export function usePresenter() {
 
   // A new query starts from scratch: genre and page are dropped.
   // `replace` keeps typing from flooding the browser history.
-  const search = (query: string) => navigate({ search: { q: query.trim() }, replace: true })
+  const search = (query: string) => {
+    const nextQuery = query.trim()
+    // "lost" → "lost " is the same search: keep the selected genre and page.
+    if (nextQuery === q) return
+    navigate({ search: { q: nextQuery }, replace: true })
+  }
 
   const changeGenre = (nextGenre: string | undefined) =>
     navigate({ search: (prev) => ({ ...prev, genre: nextGenre, page: undefined }) })
