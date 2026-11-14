@@ -1,9 +1,11 @@
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useCancelStaleSearches } from './useCancelStaleSearches'
 
 /** Page root presenter: the only place that reads and changes the router (search params). */
 export function usePresenter() {
   const { q, genre, page } = useSearch({ from: '/' })
   const navigate = useNavigate({ from: '/' })
+  const cancelStaleSearches = useCancelStaleSearches()
 
   // A new query starts from scratch: genre and page are dropped.
   // `replace` keeps typing from flooding the browser history.
@@ -11,6 +13,7 @@ export function usePresenter() {
     const nextQuery = query.trim()
     // "lost" → "lost " is the same search: keep the selected genre and page.
     if (nextQuery === q) return
+    cancelStaleSearches(nextQuery)
     navigate({ search: { q: nextQuery }, replace: true })
   }
 

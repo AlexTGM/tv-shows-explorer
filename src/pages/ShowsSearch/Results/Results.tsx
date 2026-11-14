@@ -1,3 +1,11 @@
+import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+import { cn } from '#/lib/utils'
+import { usePresenter } from './logic/usePresenter'
+import { ResultsError } from './ResultsError/ResultsError'
+import { ResultsSkeleton } from './ResultsSkeleton/ResultsSkeleton'
+import { ShowsBrowser } from './ShowsBrowser/ShowsBrowser'
+
 type Props = {
   query: string
   genre: string | undefined
@@ -6,13 +14,31 @@ type Props = {
   onPageChange: (page: number) => void
 }
 
-// Step 2 stub: shows the URL state it receives. ErrorBoundary + Suspense + data come in step 4.
-export function Results({ query, genre, page }: Props) {
+export function Results(props: Props) {
+  const { query, genre, page, isStale, resetQueryErrors } = usePresenter(props)
+
   return (
-    <section aria-label="Search results" className="rounded-md border p-4 font-mono text-sm">
-      <p>query: {query}</p>
-      <p>genre: {genre ?? '(all)'}</p>
-      <p>page: {page}</p>
+    <section
+      aria-label="Search results"
+      aria-busy={isStale}
+      className={cn('transition-opacity', isStale && 'opacity-50')}
+    >
+      {/* A new query clears a previous error by itself (resetKeys). */}
+      <ErrorBoundary
+        FallbackComponent={ResultsError}
+        onReset={resetQueryErrors}
+        resetKeys={[query]}
+      >
+        <Suspense fallback={<ResultsSkeleton />}>
+          <ShowsBrowser
+            query={query}
+            genre={genre}
+            page={page}
+            onGenreChange={props.onGenreChange}
+            onPageChange={props.onPageChange}
+          />
+        </Suspense>
+      </ErrorBoundary>
     </section>
   )
 }

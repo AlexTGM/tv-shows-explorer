@@ -31,7 +31,7 @@ Rules that can be checked automatically are checked by `pnpm check` (Biome) and 
 | **Page** | The root of a screen's component tree (`src/pages/`). Its presenter is the only one that touches the router |
 | **Route** | A TanStack file route (`src/routes/`): validates search params, preloads data, renders the page |
 | **api** | Abstraction over the server: endpoints, zod schemas, mapping to app types. Tasks call it the way the course's `logout` calls its request helper |
-| **queries** | Query key factories and `queryOptions` for the Query cache (the Entity); `queryFn` calls a Task |
+| **queries** | Query key factories and `queryOptions` for the Query cache (the Entity). Every query goes through a factory. Week 1 has no Tasks yet, so `queryFn` calls `api` directly; from week 2 it calls a Task |
 
 ## `src` structure
 
@@ -41,7 +41,7 @@ pages/        pages: the root of a screen's component tree
 components/   components reused across pages (ui/ — shadcn primitives)
 tasks/        Tasks reused by several components
 api/          abstraction over the server: TVmaze endpoints, zod schemas, mapping to app types
-queries/      key factories and queryOptions (TkDodo style); queryFn calls a Task
+queries/      key factories and queryOptions (TkDodo style); queryFn calls api (a Task from week 2)
 hooks/        reusable hooks
 lib/          React-free utilities: http client, cn, etc.
 ```

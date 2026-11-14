@@ -303,7 +303,7 @@
       }
     },
     {
-      "includes": ["**/src/queries/**", "**/src/routes/**"],
+      "includes": ["**/src/routes/**"],
       "linter": {
         "rules": {
           "style": {
