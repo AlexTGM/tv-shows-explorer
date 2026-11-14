@@ -1,3 +1,4 @@
+import { SearchX } from 'lucide-react'
 import { GenreFilter } from './GenreFilter/GenreFilter'
 import { usePresenter } from './logic/usePresenter'
 import { Pagination } from './Pagination/Pagination'
@@ -26,11 +27,17 @@ export function ShowsBrowser(props: Props) {
   } = usePresenter(props)
 
   if (isEmpty) {
-    return <p className="text-muted-foreground">No shows found for “{query}”.</p>
+    return (
+      <div className="flex flex-col items-center gap-3 py-12 text-center">
+        <SearchX aria-hidden className="size-10 text-muted-foreground" strokeWidth={1.5} />
+        <p className="font-display font-semibold text-2xl">Nothing on the bill for “{query}”</p>
+        <p className="text-muted-foreground">Check the spelling or try a shorter, broader word.</p>
+      </div>
+    )
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <GenreFilter
         genres={genres}
         selected={selectedGenre}

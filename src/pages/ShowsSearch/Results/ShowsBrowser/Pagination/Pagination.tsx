@@ -9,7 +9,7 @@ type Props = {
 }
 
 const buttonClass =
-  'flex size-9 items-center justify-center rounded-md border disabled:pointer-events-none disabled:opacity-40'
+  'flex size-10 items-center justify-center rounded-full border bg-card/60 font-semibold text-sm tabular-nums transition hover:border-primary/60 hover:text-primary disabled:pointer-events-none disabled:opacity-30'
 
 export function Pagination(props: Props) {
   const { isVisible, pages, canGoBack, canGoForward, goBack, goForward } = usePresenter(props)
@@ -36,7 +36,11 @@ export function Pagination(props: Props) {
               onClick={select}
               aria-current={isCurrent ? 'page' : undefined}
               aria-label={`Page ${number}`}
-              className={cn(buttonClass, isCurrent && 'bg-foreground text-background')}
+              className={cn(
+                buttonClass,
+                isCurrent &&
+                  'border-primary bg-primary text-primary-foreground shadow-[0_0_20px] shadow-primary/30 hover:text-primary-foreground',
+              )}
             >
               {number}
             </button>

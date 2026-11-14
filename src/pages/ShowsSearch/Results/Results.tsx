@@ -21,7 +21,10 @@ export function Results(props: Props) {
     <section
       aria-label="Search results"
       aria-busy={isStale}
-      className={cn('transition-opacity', isStale && 'opacity-50')}
+      className={cn(
+        'transition duration-300',
+        isStale && 'pointer-events-none opacity-40 blur-[1px] grayscale',
+      )}
     >
       {/* A new query clears a previous error by itself (resetKeys). */}
       <ErrorBoundary

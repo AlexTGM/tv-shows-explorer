@@ -10,11 +10,11 @@ export function SearchBar(props: Props) {
   const { value, isTyping, change, submit } = usePresenter(props)
 
   return (
-    <search>
-      <form onSubmit={submit} className="relative">
+    <search className="mx-auto w-full max-w-2xl">
+      <form onSubmit={submit} className="group relative">
         <Search
           aria-hidden
-          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 opacity-60"
+          className="pointer-events-none absolute top-1/2 left-5 size-5 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-primary"
         />
         <input
           type="search"
@@ -23,12 +23,12 @@ export function SearchBar(props: Props) {
           placeholder="Search shows, e.g. murder"
           aria-label="Search shows"
           autoComplete="off"
-          className="w-full rounded-md border py-2 pr-10 pl-9"
+          className="h-14 w-full rounded-full border border-input bg-card/70 pr-14 pl-14 text-lg shadow-black/40 shadow-xl outline-none backdrop-blur transition placeholder:text-muted-foreground/70 focus:border-primary/70 focus:shadow-primary/10 focus:ring-4 focus:ring-primary/15"
         />
         {isTyping && (
           <LoaderCircle
             aria-label="Waiting for you to stop typing"
-            className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin opacity-60"
+            className="absolute top-1/2 right-5 size-5 -translate-y-1/2 animate-spin text-primary"
           />
         )}
       </form>
