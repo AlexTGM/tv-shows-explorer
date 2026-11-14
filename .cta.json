@@ -14,10 +14,5 @@
   "includeExamples": false,
   "version": 1,
   "framework": "react",
-  "chosenAddOns": [
-    "tanstack-query",
-    "shadcn",
-    "biome",
-    "netlify"
-  ]
+  "chosenAddOns": ["tanstack-query", "shadcn", "biome", "netlify"]
 }

@@ -14,7 +14,7 @@
     "lint": "biome lint",
     "check": "biome check",
     "check:fix": "biome check --write",
-    "check:size": "node scripts/check-size.mjs",
+    "check:size": "node scripts/checkSize.mjs",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

@@ -1,256 +1,321 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.5/schema.json",
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true
-	},
-	"files": {
-		"ignoreUnknown": false,
-		"includes": [
-			"**/src/**/*",
-			"**/.vscode/**/*",
-			"**/index.html",
-			"**/vite.config.ts",
-			"!**/src/routeTree.gen.ts",
-			"!**/src/styles.css"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab"
-	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "double"
-		}
-	},
-	"overrides": [
-		{
-			"includes": ["**/src/pages/**", "**/src/components/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["../**", "!../**/components/**"],
-										"message": "Upward imports go only to a components/ folder. Needed in another branch? Move it to the nearest common components/ (ARCHITECTURE.md › Where a component or Task lives)."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/pages/**/View.tsx", "**/src/components/**/View.tsx"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["../**", "!../**/components/**"],
-										"message": "Upward imports go only to a components/ folder. Needed in another branch? Move it to the nearest common components/ (ARCHITECTURE.md › Where a component or Task lives)."
-									},
-									{
-										"group": [
-											"@tanstack/*",
-											"zod",
-											"#/api/**",
-											"#/tasks/**",
-											"#/queries/**",
-											"#/hooks/**",
-											"#/lib/**",
-											"!#/lib/utils",
-											"./logic/**",
-											"!./logic/usePresenter"
-										],
-										"message": "View is JSX only: everything else comes from ./logic/usePresenter or props."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/pages/*/logic/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["../**", "!../**/components/**"],
-										"message": "Upward imports go only to a components/ folder."
-									},
-									{
-										"group": ["#/api/**"],
-										"message": "Presenter talks to the server via tasks/queries, not api directly."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/pages/*/*/**/logic/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["../**", "!../**/components/**"],
-										"message": "Upward imports go only to a components/ folder."
-									},
-									{
-										"group": ["#/api/**"],
-										"message": "Presenter talks to the server via tasks/queries, not api directly."
-									},
-									{
-										"group": ["@tanstack/react-router"],
-										"message": "Only the page root presenter reads/changes router state; nested components get props."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": [
-				"**/src/pages/**/components/**/logic/**",
-				"**/src/components/**/logic/**"
-			],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["../**", "!../**/components/**"],
-										"message": "Upward imports go only to a components/ folder."
-									},
-									{
-										"group": ["#/api/**"],
-										"message": "Presenter talks to the server via tasks/queries, not api directly."
-									},
-									{
-										"group": ["@tanstack/*"],
-										"message": "Reusable components are props-only: no router, no Query."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/tasks/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["react", "react-*", "react/**", "@tanstack/*"],
-										"message": "Tasks are plain JS functions: no React, no Query, no router."
-									},
-									{
-										"group": [
-											"#/pages/**",
-											"#/components/**",
-											"#/hooks/**",
-											"#/queries/**",
-											"#/routes/**"
-										],
-										"message": "Tasks depend only on api, lib and other tasks."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/api/**", "**/src/lib/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["react", "react-*", "react/**", "@tanstack/*"],
-										"message": "api and lib are framework-free."
-									},
-									{
-										"group": [
-											"#/pages/**",
-											"#/components/**",
-											"#/hooks/**",
-											"#/queries/**",
-											"#/tasks/**",
-											"#/routes/**"
-										],
-										"message": "api and lib may import only api and lib."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/queries/**", "**/src/routes/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["#/api/**"],
-										"message": "Go through tasks, not api directly."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		}
-	]
+  "$schema": "https://biomejs.dev/schemas/2.4.5/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**/src/**/*",
+      "**/.vscode/**/*",
+      "**/index.html",
+      "**/vite.config.ts",
+      "**/scripts/**",
+      "**/*.json",
+      "!**/src/routeTree.gen.ts",
+      "!**/src/styles.css"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": "error"
+      },
+      "style": {
+        "useImportType": "error",
+        "useExportType": "error",
+        "useNodejsImportProtocol": "error",
+        "useConst": "error",
+        "useTemplate": "error",
+        "noNonNullAssertion": "error",
+        "noDefaultExport": "error",
+        "noNegationElse": "error",
+        "useCollapsedElseIf": "error",
+        "noUselessElse": "error",
+        "useConsistentArrayType": { "level": "error", "options": { "syntax": "shorthand" } },
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": { "filenameCases": ["camelCase", "PascalCase"], "requireAscii": true }
+        }
+      },
+      "suspicious": {
+        "noConsole": { "level": "error", "options": { "allow": ["error", "warn"] } },
+        "noExplicitAny": "error"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": { "maxAllowedComplexity": 12 }
+        },
+        "useSimplifiedLogicExpression": "error"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": { "functions": ["cn", "cva", "clsx"] }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "semicolons": "asNeeded",
+      "trailingCommas": "all",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false
+    }
+  },
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/vite.config.ts", "**/src/integrations/**"],
+      "linter": { "rules": { "style": { "noDefaultExport": "off" } } }
+    },
+    {
+      "includes": ["**/src/routes/**", "**/src/components/ui/**", "**/*.gen.ts"],
+      "linter": { "rules": { "style": { "useFilenamingConvention": "off" } } }
+    },
+    {
+      "includes": ["**/scripts/**"],
+      "linter": { "rules": { "suspicious": { "noConsole": "off" } } }
+    },
+    {
+      "includes": ["**/src/pages/**", "**/src/components/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**", "!../**/components/**"],
+                    "message": "Upward imports go only to a components/ folder. Needed in another branch? Move it to the nearest common components/ (ARCHITECTURE.md › Where a component or Task lives)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/pages/**/View.tsx", "**/src/components/**/View.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**", "!../**/components/**"],
+                    "message": "Upward imports go only to a components/ folder. Needed in another branch? Move it to the nearest common components/ (ARCHITECTURE.md › Where a component or Task lives)."
+                  },
+                  {
+                    "group": [
+                      "@tanstack/*",
+                      "zod",
+                      "#/api/**",
+                      "#/tasks/**",
+                      "#/queries/**",
+                      "#/hooks/**",
+                      "#/lib/**",
+                      "!#/lib/utils",
+                      "./logic/**",
+                      "!./logic/usePresenter"
+                    ],
+                    "message": "View is JSX only: everything else comes from ./logic/usePresenter or props."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/pages/*/logic/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**", "!../**/components/**"],
+                    "message": "Upward imports go only to a components/ folder."
+                  },
+                  {
+                    "group": ["#/api/**"],
+                    "message": "Presenter talks to the server via tasks/queries, not api directly."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/pages/*/*/**/logic/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**", "!../**/components/**"],
+                    "message": "Upward imports go only to a components/ folder."
+                  },
+                  {
+                    "group": ["#/api/**"],
+                    "message": "Presenter talks to the server via tasks/queries, not api directly."
+                  },
+                  {
+                    "group": ["@tanstack/react-router"],
+                    "message": "Only the page root presenter reads/changes router state; nested components get props."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/pages/**/components/**/logic/**", "**/src/components/**/logic/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**", "!../**/components/**"],
+                    "message": "Upward imports go only to a components/ folder."
+                  },
+                  {
+                    "group": ["#/api/**"],
+                    "message": "Presenter talks to the server via tasks/queries, not api directly."
+                  },
+                  {
+                    "group": ["@tanstack/*"],
+                    "message": "Reusable components are props-only: no router, no Query."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/tasks/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["react", "react-*", "react/**", "@tanstack/*"],
+                    "message": "Tasks are plain JS functions: no React, no Query, no router."
+                  },
+                  {
+                    "group": [
+                      "#/pages/**",
+                      "#/components/**",
+                      "#/hooks/**",
+                      "#/queries/**",
+                      "#/routes/**"
+                    ],
+                    "message": "Tasks depend only on api, lib and other tasks."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/api/**", "**/src/lib/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["react", "react-*", "react/**", "@tanstack/*"],
+                    "message": "api and lib are framework-free."
+                  },
+                  {
+                    "group": [
+                      "#/pages/**",
+                      "#/components/**",
+                      "#/hooks/**",
+                      "#/queries/**",
+                      "#/tasks/**",
+                      "#/routes/**"
+                    ],
+                    "message": "api and lib may import only api and lib."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/queries/**", "**/src/routes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["#/api/**"],
+                    "message": "Go through tasks, not api directly."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
