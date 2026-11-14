@@ -122,7 +122,12 @@
       }
     },
     {
-      "includes": ["**/src/pages/**/View.tsx", "**/src/components/**/View.tsx"],
+      "includes": [
+        "**/src/pages/**/*.tsx",
+        "**/src/components/**/*.tsx",
+        "!**/logic/**",
+        "!**/src/components/ui/**"
+      ],
       "linter": {
         "rules": {
           "style": {

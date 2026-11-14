@@ -3,15 +3,35 @@
 Simple Architecture (VIPER + Clean Architecture), adapted to React and TanStack Start.
 Rules that can be checked automatically are checked by `pnpm check` (Biome) and `pnpm check:size`.
 
-## VIPER in this project
+## Glossary
 
-| Letter | What it is here | Where it lives |
+### Course terms (lessons 1–2)
+
+| Term | Meaning | Here |
 |---|---|---|
-| **V**iew | JSX only plus the single `usePresenter` hook | `View.tsx` |
-| **I**nteractor → **Task** | A use case: a plain JS function with a verb for a name, no React | `logic/tasks/` or `src/tasks/` |
-| **P**resenter | The bridge between UI and business logic: screen state, handlers, which Task to call on which event, navigation | `logic/usePresenter.ts` |
-| **E**ntity | Data stores and the ways to update them. We have two stores: the TanStack Query cache (server data) and the URL (search state) | `src/queries/`, route search params |
-| **R**outer | Navigation. It is not business logic, so it is done in the presenter | `logic/usePresenter.ts` |
+| **Goal of architecture** | Reduce the human effort needed to build *and maintain* the system. Maintenance weighs more: a feature is written once and changed for years | — |
+| **VIPER** | View, Interactor, Presenter, Entity, Router. Borrowed from iOS developers, who built it on Clean Architecture | the rows below |
+| **View** | What the user sees, i.e. JSX. A component file holds only JSX and the single `usePresenter` hook | `ShowCard/ShowCard.tsx` |
+| **Presenter** | The bridge between UI and business logic. Takes 100% of the component's logic: gets data, prepares it for View, decides which Task to call on which event | `logic/usePresenter.ts` |
+| **Presenter hooks** | Parts of the presenter split into their own hooks when it grows (`useSuggestions` in the course) | `logic/use*.ts` |
+| **Business rules** | Rules that make or save money, whether or not a computer runs them (a bank's loan interest) | — |
+| **Use case** | Application-specific business rules: what the user enters, what the system does, what it returns. Close to a user story. Says nothing about tools or frameworks | implemented as Tasks |
+| **Task** (Interactor) | A use case as a plain JS function named with a verb (`login`, `searchShows`). One function from the outside even if split into files. No React | `logic/tasks/`, `src/tasks/` |
+| **Entity** | Data plus the ways to update it, i.e. the state manager's store. Tasks use stores directly, without middleware libraries (thunk, saga) | TanStack Query cache, URL search params |
+| **Router** | Navigation. Not business logic (it depends on the environment), so it is done in the presenter | page root presenter |
+| **Component tree** | One component, one folder. A component used once lives inside the folder of the component that uses it. The folder tree mirrors the screen | `pages/<Page>/…` |
+| **`components/`** | Only reusable components, used only further down the tree. Can exist at any level; `src/components/` is the global one | any level |
+| **`logic/`** | Everything in a component that is not JSX: the presenter, other hooks and `tasks/` | per component |
+| **120-line rule** | No file longer than 120 lines: forces small, readable files | `pnpm check:size` |
+
+### Project terms (not from the course)
+
+| Term | Meaning |
+|---|---|
+| **Page** | The root of a screen's component tree (`src/pages/`). Its presenter is the only one that touches the router |
+| **Route** | A TanStack file route (`src/routes/`): validates search params, preloads data, renders the page |
+| **api** | Abstraction over the server: endpoints, zod schemas, mapping to app types. Tasks call it the way the course's `logout` calls its request helper |
+| **queries** | Query key factories and `queryOptions` for the Query cache (the Entity); `queryFn` calls a Task |
 
 ## `src` structure
 
@@ -28,24 +48,24 @@ lib/          React-free utilities: http client, cn, etc.
 
 ## Component
 
-One component, one folder:
+One component, one folder. The View file is named after the folder:
 
 ```
 ShowCard/
-  index.ts              export { ShowCard } from "./View"
-  View.tsx              JSX only
+  ShowCard.tsx          View: JSX only
   logic/                everything that is not JSX
     usePresenter.ts
     useSomething.ts     other hooks of the component
     tasks/
       formatRating.ts       a Task as a single file…
       collectGenres/        …or as a folder if it does not fit into 120 lines
-        index.ts
+        collectGenres.ts
   Child/                a child component used only here
   components/           components reused by several descendants
 ```
 
-`logic/` and `tasks/` are optional: a component may consist of a single `View.tsx` that takes props.
+It is imported with the repeated name: `import { ShowCard } from './ShowCard/ShowCard'`.
+`logic/` and `tasks/` are optional: a component may consist of a single View file that takes props.
 
 ### Where a component or Task lives
 
