@@ -90,7 +90,7 @@
   },
   "overrides": [
     {
-      "includes": ["**/vite.config.ts", "**/src/integrations/**"],
+      "includes": ["**/vite.config.ts", "**/src/integrations/**", "**/src/server.ts"],
       "linter": { "rules": { "style": { "noDefaultExport": "off" } } }
     },
     {
